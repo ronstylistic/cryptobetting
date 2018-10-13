@@ -1,1 +1,1 @@
-# cryptobet
+# cryptobetting
