@@ -1,0 +1,26 @@
+#slider{
+    height: 400px;
+    width: 100%;
+    position: relative;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+#slider .jumbotron{
+    background-color: transparent;
+    color: #fff;
+}
+
+
+#slider::after {
+    content: "";
+    background: url('../images/crypto.jpeg') no-repeat;
+    background-size: cover;
+    background-position: 50% 50%;
+    opacity: 0.5;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    right: 0;
+    position: absolute;
+    z-index: -1;
+}
+

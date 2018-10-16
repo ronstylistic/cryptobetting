@@ -10,7 +10,7 @@ router.get('/', (req, res) => {
 	res.redirect('/player/dashboard');
 });
 
-router.get('/dashboard', middleware.isValid, playerController.dashboard);
+router.get('/dashboard', playerController.dashboard);
 
 router.get('/logout', (req, res) => {
 	if( req.session.user && req.cookies.user_sid ){

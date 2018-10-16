@@ -11,7 +11,7 @@ router.post('/login', middleware.validateCredentials, authController.postLogin);
 
 //auth register routes
 router.get('/register', authController.register);
-router.post('/register', middleware.validateNewPlayer, authController.postRegister);
+router.post('/register', authController.postRegister);
 
 
 module.exports = router;

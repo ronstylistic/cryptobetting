@@ -12,8 +12,6 @@ const session = require('express-session');
 mongoose.connect(config.database, { useNewUrlParser: true, useCreateIndex: true });
 
 const indexRouter = require('./routes/index');
-const authRouter = require('./routes/auth');
-const playerRouter = require('./routes/player');
 const apiRouter = require('./routes/api');
 
 const app = express();
@@ -56,8 +54,6 @@ app.use('/js', express.static(__dirname + '/node_modules/jquery/dist'));
 app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css')); 
 
 app.use('/', indexRouter);
-app.use('/auth', authRouter);
-app.use('/player', playerRouter);
 app.use('/api', apiRouter);
 
 
