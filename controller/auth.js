@@ -7,7 +7,7 @@ const url = "http://localhost:3000";
 
 const data = {
 	title: 'Crypto Bet',
-	layout: 'loginLayout.hbs',
+	layout: 'login_layout.hbs',
 }
 
 module.exports.login = (req, res) => {

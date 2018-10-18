@@ -11,6 +11,11 @@ router.get('/', (req, res) => {
 });
 
 router.get('/dashboard', playerController.dashboard);
+router.get('/deposit', playerController.deposit);
+router.get('/withdraw', playerController.withdrawal);
+router.get('/wallet_transactions', playerController.walletTransactions);
+router.get('/bet_history', playerController.betHistory);
+router.get('/settings', playerController.settings);
 
 router.get('/logout', (req, res) => {
 	if( req.session.user && req.cookies.user_sid ){

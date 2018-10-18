@@ -1,65 +1,70 @@
-<section id="login" class="mt-1 pb-5">
-  <div class="container">
+<div class="container">
+  <div class="card card-login mx-auto mt-5 rounded-0">
+    <div class="card-header">Join
+      <a href="/" class="close" type="button" class="close" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </a>
+    </div>
 
-    <div class="row">
-      <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12 mx-auto">
+    <div class="card-body">
 
-        <div class="card rounded-0">
-          <div class="card-header">
-            <h3 class="mb-0 float-left">Join</h3>
+      <form name="form" class="form" action="/auth/login" method="POST">
 
-            <a href="/" class="close" type="button" class="close" aria-label="Close">
-  <span aria-hidden="true">&times;</span>
-</a>
+        <div class="form-group">
+          <div class="form-label-group">
+            <input type="text" id="inputfirstname" class="form-control rounded-0" placeholder="Your Firstname" required="required"
+              autofocus="autofocus">
+            <label for="inputfirstname">Firstname</label>
+            {{#if errors.firstname }}
+            <small class="form-text text-danger">{{ errors.firstname.msg }}</small>
+            {{/if}}
           </div>
+        </div>
 
-          <div class="card-body">
+        <div class="form-group">
+          <div class="form-label-group">
+            <input type="text" id="inputlastname" class="form-control rounded-0" placeholder="Your Lastname" required="required"
+              autofocus="autofocus">
+            <label for="inputlastname">Lastname</label>
+            {{#if errors.lastname }}
+            <small class="form-text text-danger">{{ errors.lastname.msg }}</small>
+            {{/if}}
+          </div>
+        </div>
 
-            {{#if success}}
-              <div class="alert alert-success">You successfully registered.</div>
+        <div class="form-group">
+          <div class="form-label-group">
+            <input type="email" id="inputEmail" class="form-control rounded-0" placeholder="Your email" required="required"
+              autofocus="autofocus">
+            <label for="inputEmail">Email address</label>
+            {{#if errors.email }}
+            <small class="form-text text-danger">{{ errors.email.msg }}</small>
+            {{/if}}
+          </div>
+        </div>
+
+        <div class="form-group">
+          <div class="form-label-group">
+            <input type="password" id="inputPassword" class="form-control rounded-0" placeholder="Password" required="required">
+            <label for="inputPassword">Password</label>
+
+            {{#if errors.password }}
+            <small class="form-text text-danger">{{ errors.password.msg }}</small>
             {{/if}}
 
-            <form name="form" class="form" action="/auth/register" method="POST">
-              <div class="form-group">
-                <label for="firtname">Your firstname</label>
-                <input type="text" class="form-control form-control-md rounded-0" name="firstname" required/>
-                {{#if errors.firstname }}
-                <small class="form-text text-danger">{{ errors.firstname.msg }}</small>
-                {{/if}}
-              </div>
-
-              <div class="form-group">
-                <label for="lastname">Your lastname</label>
-                <input type="text" class="form-control form-control-md rounded-0" name="lastname" required/>
-                {{#if errors.lastname }}
-                <small class="form-text text-danger">{{ errors.lastname.msg }}</small>
-                {{/if}}
-              </div>
-
-              <div class="form-group">
-                <label for="email">Your email</label>
-                <input type="email" class="form-control form-control-md rounded-0" name="email" required />
-                {{#if errors.email }}
-                <small class="form-text text-danger">{{ errors.email.msg }}</small>
-                {{/if}}
-              </div>
-
-              <div class="form-group">
-                <label for="password">Your password</label>
-                <input type="password" class="form-control form-control-md rounded-0" name="password" required />
-                {{#if errors.password }}
-                <small class="form-text text-danger">{{ errors.password.msg }}</small>
-                {{/if}}
-              </div>
-
-              <button type="submit" class="btn btn-primary btn-lg btn-block rounded-0">Submit</button>
-              <p class="text-center mt-1"> Already have an account? <a href="/auth/login">Sign in </a> </p> 
-            </form>
-
           </div>
-
         </div>
+
+        <button type="submit" class="btn btn-primary btn-block rounded-0">Submit</button>
+
+      </form>
+
+      <div class="text-center mt-3">
+        <div>Already have an account? <a href="/auth/login">Sign In </a> </div>
       </div>
+
     </div>
+
   </div>
-</section>
+
+</div>
