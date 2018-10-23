@@ -3,15 +3,15 @@
 const express = require('express');
 const router = express.Router();
 const authController = require('../controller/auth');
-const middleware = require('../middleware');
+const validator = require('../middleware/validator');
 
 //auth login routes
-router.get('/login',  middleware.isLoggedIn, authController.login);
-router.post('/login', middleware.validateCredentials, authController.postLogin);
+router.get('/login',  validator.isLoggedIn, authController.login);
+router.post('/login', validator.validateCredentials, authController.postLogin);
 
 //auth register routes
 router.get('/register', authController.register);
-router.post('/register', authController.postRegister);
+router.post('/register', validator.validateNewPlayer, authController.postRegister);
 
 
 module.exports = router;

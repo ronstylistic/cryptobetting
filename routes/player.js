@@ -3,7 +3,6 @@
 const express = require('express');
 const router = express.Router();
 const playerController = require('../controller/player');
-const middleware = require('../middleware');
 
 /* GET home page. */
 router.get('/', (req, res) => {

@@ -24,7 +24,6 @@ module.exports.isLoggedIn = (req, res, next) => {
 } 
 
 module.exports.validateNewPlayer = (req, res, next) => {
- 
     req.checkBody('firstname', 'Firstname is required').not().isEmpty();
     req.checkBody('lastname', 'Lastname is required').not().isEmpty();
     req.checkBody('email', 'Email address is invalid').isEmail();
