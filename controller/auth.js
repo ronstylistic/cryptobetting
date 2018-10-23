@@ -3,7 +3,6 @@
 const User = require('../models/User');
 const AuthService = require('../service/AuthService');
 const axios = require('axios');
-const url = "http://localhost:3000";
 
 const data = {
 	title: 'Crypto Bet',
@@ -62,5 +61,4 @@ module.exports.postRegister = (req, res ) => {
    /* axios.post( url + '/api/v1/auth/register', req.body)
    .then((response) => res.status(200).send( response.data ) )
    .catch((error) => res.status(500).send({error: error.message})) */
-
 }

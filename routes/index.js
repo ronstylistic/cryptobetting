@@ -12,8 +12,7 @@ const casinoRouter = require('./casino');
 router.get('/', indexController.load);
 
 router.use('/auth', authRouter);
-//router.use('/player', middleware.isValid, playerRouter);
-router.use('/player', playerRouter);
+router.use('/player', middleware.isValid, playerRouter);
 router.use('/sports', sportsRouter);
 router.use('/casino', casinoRouter);
 
