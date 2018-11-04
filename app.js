@@ -7,12 +7,13 @@ const mongoose = require('mongoose');
 const hbs = require('express-handlebars');
 const config = require('./config');
 const validator = require('express-validator');
+//const cookieSession = require('cookie-session');
 const session = require('express-session');
+const flash = require('express-flash');
 
-mongoose.connect(config.database, { useNewUrlParser: true, useCreateIndex: true });
+mongoose.connect(`mongodb://${config.database.host}:${config.database.port}/${config.database.name}`, { useNewUrlParser: true, useCreateIndex: true });
 
 const indexRouter = require('./routes/index');
-const apiRouter = require('./routes/api');
 
 const app = express();
 
@@ -34,12 +35,13 @@ app.use(session({
 	secret: config.secret, 
 	saveUninitialized: false, 
 	resave: false, 
-	cookie: { 
-		expires: 600000 
+	cookie: { 		
+		expires: new Date(Date.now() + 60 * 60 * 1000)
 	} 
 }));
+app.use(flash());
 
-// This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
+ // This middleware will check if user's cookie is still saved in browser and user is not set, then automatically log the user out.
 // This usually happens when you stop your express server after login, your cookie still remains saved in the browser.
 app.use((req, res, next) => {
 	if(req.cookies.user_sid && !req.session.user){
@@ -56,8 +58,6 @@ app.use('/css', express.static(__dirname + '/node_modules/bootstrap/dist/css'));
 app.use('/css', express.static(__dirname + '/node_modules/startbootstrap-sb-admin'));
 
 app.use('/', indexRouter);
-app.use('/api', apiRouter);
-
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

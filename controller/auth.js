@@ -1,104 +1,117 @@
 // controller/auth.js
 const AuthService = require('../service/AuthService');
+const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
+const config = require('../config');
 
-const data = {
-	title: 'Crypto Bet',
-	layout: 'login_layout.hbs',
-}
+const layout = 'login_layout.hbs';
 
 exports.register = (req, res, next) => {
-    data.title = 'Register';
-    data.errors = req.session.errors;
-    data.error_message = req.session.error_message;
-    //data.success_message = req.session.success_message;
-    data.form = data.errors || data.error_message ? req.session.form : null;
-    res.render('register', data);
-
-    req.session.error_message = null;
-    //req.session.success_message = null;
-    req.session.errors = null;
+   res.render('register', { title: 'Register', layout: layout });
 }
 
 exports.postRegister = (req, res, next) => {
 
-    let errors = req.validationErrors(true);
-    req.session.form = req.body;
+    let data = { title: 'Register', layout: layout };
+    let errors = req.validationErrors();
 
     if (errors) {
-        req.session.errors = errors;
-        res.redirect('/auth/register');
-    } else {
+        data.validation_error = errors;
+        data.form = req.body;
+        res.render('register', data);
+    }
+    else{
+        let hashedPassword = bcrypt.hashSync(req.body.password, 10);
 
         let user = {
             firstname: req.body.firstname,
             lastname: req.body.lastname,
             email: req.body.email,
-            password: req.body.password,
+            password: hashedPassword
         }
 
-        AuthService.register(user)
-            .then((result) => {
-                if (result.auth) {
-                    req.session.user = result;
-                    res.redirect('/player/dashboard');
-                }
-            })
-            .catch((error) => {
-                req.session.error_message = "Sorry, Email address already in use.";
+        AuthService
+            .register(user)
+            .then(() => {
+                req.flash('success', 'Your account successfully created.');
                 res.redirect('/auth/register');
+            })
+            .catch(() => {
+                data.error = "Sorry, Email address already in use.";
+                data.form = req.body;
+                res.render('register', data);
             });
     }
 }
 
 
 exports.login = (req, res, next) => {
-
-    data.title = 'Login';
-    data.errors = req.session.errors;
-    data.error_message = req.session.error_message;
-    data.success_message = req.session.success_message;
-    data.form = req.session.errors || req.session.error_message ? req.session.form : null;
-
-    res.render('login', data);
-
-    req.session.error_message = null;
-    req.session.success_message = null;
-    req.session.errors = null;
+   res.render('login', { title: 'Login', layout: layout });
 }
 
 //Submit Login
 exports.postLogin = (req, res, next) => {
-    let errors = req.validationErrors(true);
-    req.session.form = req.body;
+    let data = { title: 'Login', layout: layout };
+    let errors = req.validationErrors();
 
-    if (errors) {
-        req.session.errors = errors;
-        res.redirect('/auth/login');
-    } else {
-        const { email, password } = req.body;
-
-        AuthService.login(email, password)
-            .then((result) => {
-
-                if (result.auth) {
-                    req.session.user = result;
-                    res.redirect('/player/dashboard');
-                } else {
-                    req.session.error_message = "Login Failed! Email or Password as incorrect.";
-                    res.redirect('/auth/login');
-                }
-
-            })
-            .catch(() => {
-                req.session.error_message = "Sorry, Email address already in use.";
-                res.redirect('/auth/login');
-            });
+    if(errors){
+        data.validation_error = errors;
+        data.form = req.body;
+        res.render('login', data);
     }
+    else{
+
+        const { email, password } = req.body;
+        AuthService.login(email).then((user) => {
+
+            if (user) {
+
+                const passwordIsValid = bcrypt.compareSync(password, user.password);
+
+                if (!passwordIsValid) {
+                    data.error = "Login Failed! Email or Password is incorrect.";
+                    data.form = req.body;
+                    res.render('login', data);
+                }
+                else{
+                    const token = jwt.sign({
+                        id: user._id,
+                        iss: config.issuer,
+                        scope: ['READ', 'WRITE']
+                    }, config.secret, {
+                        expiresIn: config.token_expiration
+                    });
+                    
+                    let session = {
+                        token: token,
+                        user: {
+                            id: user._id,
+                            email: user.email,
+                            firstname: user.firstname,
+                            lastname: user.lastname
+                        }
+                    }
+
+                    req.session.user = session;
+                    res.redirect('/player/dashboard');
+                }
+            } else {
+                data.error = "Sorry, email address was not found.";
+                data.form = req.body;
+                res.render('login', data);
+            }
+
+        })
+        .catch(() => {
+            data.error = "Network Error, please try again!";
+            res.render('login', data);
+        });
+    }
+   
 }
 
 exports.forgotPassword = (req, res, next) => {
-    data.title = 'Forgot Password';
-    res.render('forgot', data);
+    res.render('forgot', { title: 'Forgot Password', layout: layout });
 }
 
 exports.postForgotPassword = (req, res) => {
@@ -119,3 +132,11 @@ exports.confirmation = (req, res) => {
             res.redirect('/auth/login');
         }); */
 }
+
+/* app.get('/', function (req, res) {
+    http.request('http://jsonplaceholder.typicode.com/posts/1', function (response) {
+        response.pipe(res);
+    }).on('error', function (e) {
+        res.sendStatus(500);
+    }).end();
+}); */
